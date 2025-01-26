@@ -66,3 +66,5 @@
 | 0100C9801FEE6000 | Yakuza Kiwami | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 65536 |
 | 0100BB901FA12000 | Little Big Adventure - Twinsen's Quest | **Name**: Улучшение графики и 60+ кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 262144 |
 | 01006C100EC08000 | Minecraft Dungeons | **Name**: Улучшение графики<br>**Description**: Вариант 1 - 30FPS<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 1769472<br><br>**Name**: Улучшение графики<br>**Description**: Вариант 2 - 60FPS<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 1769472 |
+| 01007BE01FCC2000 | Achilles: Legends Untold | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
+| 010036601EB1E000 | Mark of the Deep | **Name**: Улучшение графики и 60+ кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
