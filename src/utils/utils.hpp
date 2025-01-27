@@ -27,7 +27,7 @@ bool copy(const std::filesystem::path &source, const std::filesystem::path &dest
 std::string readFile(const std::filesystem::path &filePath);
 std::string readFileOldWay(const std::filesystem::path &filePath);
 
-std::string getFileNameFromUrl(const std::string &url);  // Здесь путь не задействован
+std::string getFileNameFromUrl(const std::string &url);
 
 std::string calculateProgress(const long totalSize, const long downloadedSize);
 std::string convertToUnit(size_t size);
