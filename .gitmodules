@@ -1,0 +1,9 @@
+[submodule "extern/json"]
+	path = extern/json
+	url = https://github.com/nlohmann/json
+[submodule "extern/borealis"]
+	path = extern/borealis
+	url = https://github.com/kawaii-flesh/borealis
+[submodule "extern/fslib"]
+	path = extern/fslib
+	url = https://github.com/kawaii-flesh/FsLib

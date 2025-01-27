@@ -1,0 +1,6 @@
+BasedOnStyle: Google
+InsertBraces: true
+IndentWidth: 4
+ColumnLimit: 120
+InsertNewlineAtEOF: true
+PointerAlignment: Left

@@ -1,0 +1,84 @@
+{
+    "Errors": {
+        "RunningInAppletMode": "The application is running in applet mode. Restart in non-applet mode",
+        "NoSupportedModsOrGames": "There are no mods in the repository for installed games or their versions",
+        "NoSupportedModsOrGamesOffline": "OFFLINE MODE\nThere are no mods in the local storage for installed games or their versions",
+        "RepositoryAccessException": "Unable to access the repository:\n{url}"
+    },
+    "GamesListView": {
+        "SearchLineEdit": {
+            "Placeholder": "X - Search",
+            "PostfixLineEditText": "{prefix} (X - Search | B - Clear)"
+        },
+        "Toast": {
+            "FoundedGames": "Supported games were found: {count}",
+            "UpdateSuccessful": "The update was successful. Restart the app to use the new version",
+            "UpdateError": "An error occurred during the update",
+            "DownloadIsStarting": "The download is starting"
+        },
+        "OfflineDialog": {
+            "Message": "The application is running in offline mode\n\nDownloading screenshots and mods is not available"
+        },
+        "UpdateDialog": {
+            "UpdateMessage": "An update is available for download:\n{currentVersion} -> {newVersion}\n\nAfter the update, the app will close automatically",
+            "UpdateButton": "UPDATE",
+            "SkipButton": "SKIP"
+        }
+    },
+    "GameTileView": {
+        "TitleID": "TitleID: {id}",
+        "Version": "Version: {version}"
+    },
+    "ModTileView": {
+        "Name": "Name: {name}",
+        "Type": "Type: {type}",
+        "Author": "Author: {author}",
+        "Description": "Description: {description}"
+    },
+    "ModView": {
+        "CommonButton": {
+            "Clearing": "Clearing..."
+        },
+        "ModButton": {
+            "Placeholder": "Mod",
+            "Download": "Download {size}",
+            "Loading": "Loading..."
+        },
+        "ScreenshotsButton": {
+            "Placeholder": "Screenshots",
+            "Download": "Screenshots {size}",
+            "ViewScreenshots": "View screenshots",
+            "Extracting": "Extracting..."
+        },
+        "ClearScreenshotsButton": {
+            "Placeholder": "Clear"
+        },
+        "InstallModButton": {
+            "Placeholder": "Install",
+            "Progress": "Installing..."
+        },
+        "UninstallModButton": {
+            "Placeholder": "Uninstall",
+            "Progress": "Uninstalling..."
+        },
+        "Toast": {
+            "ModHasBeenInstalled": "Mod has been installed",
+            "ModHasBeenUninstalled": "Mod has been uninstalled",
+            "ScreenshotsHaveBeenDeleted": "Screenshots have been deleted",
+            "ScreenshotsArchiveHasBeenDownloaded": "Screenshots archive has been downloaded",
+            "DownloadOfTheScreenshotsArchiveHasBeenStopped": "Download of the screenshots archive has been stopped",
+            "DownloadErrorHasOccurred": "Download error has occurred",
+            "ModArchiveHasBeenDeleted": "Mod archive has been deleted",
+            "ModArchiveHasBeenDownloaded": "Mod archive has been downloaded",
+            "DownloadOfTheModArchiveHasBeenStopped": "Download of the mod archive has been stopped",
+            "ErrorWhenUnpackingScreenshots": "Error when unpacking screenshots"
+        },
+        "OfflineDialog": {
+            "ApplicationNeedsToBeRestarted": "The application needs to be restarted",
+            "OkButton": "OK"
+        }
+    },
+    "LoadingView" : {
+        "LoadingLabel": "Loading..."
+    }
+}
