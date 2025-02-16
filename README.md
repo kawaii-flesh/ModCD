@@ -28,7 +28,7 @@
 
 Если вам понравился мод, то не забудьте поблагодарить его автора
 
-- ECLIPSE00074 - [донаты](https://github.com/kawaii-flesh/ModCD-Donations/blob/master/ECLIPSE00074.md)
+- ECLIPSE00074
 
 ## FAQ (которые никто не задавал)
 
