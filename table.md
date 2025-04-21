@@ -32,7 +32,7 @@
 | 01004D300C5AE000 | Kirby and the Forgotten Land | **Name**: Разрешение<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0<br><br>**Name**: Разрешение + 60 кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
 | 0100650018FE0000 | Kingdom Come: Deliverance | **Name**: Улучшение графики<br>**Description**: Для Mariko<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072<br><br>**Name**: Улучшение графики<br>**Description**: Для Erista<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072 |
 | 01007300020FA000 | Astral Chain | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 65536 |
-| 0100AD10102B2000 | BioShock Remastered | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 65536 |
+| 0100AD10102B2000 | BioShock Remastered | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 65536, 9895936 |
 | 0100830004FB6000 | L.A. Noire | **Name**: Улучшение графики<br>**Description**: Для Mariko<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072<br><br>**Name**: Улучшение графики<br>**Description**: Для Erista<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072 |
 | 010042D00D900000 | Lego Star Wars: The Skywalker Saga | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 589824 |
 | 0100DBF01000A000 | Burnout Paradise Remastered | **Name**: Улучшение графики<br>**Description**: Для Mariko<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0<br><br>**Name**: Улучшение графики<br>**Description**: Для Erista<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
@@ -69,3 +69,9 @@
 | 01007BE01FCC2000 | Achilles: Legends Untold | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
 | 010036601EB1E000 | Mark of the Deep | **Name**: Улучшение графики и 60+ кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 0 |
 | 0100CE101B698000 | Monster Jam Showdown | **Name**: Улучшение графики<br>**Description**: Для Erista<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 458752<br><br>**Name**: Улучшение графики<br>**Description**: Для Mariko<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 458752 |
+| 01008F701C074000 | Sonic Superstars | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: _ZolMik_<br>**Supported Versions**: 327680 |
+| 010057D006492000 | Octopath Traveler | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 262144, 327680 |
+| 0100A3501946E000 | Octopath Traveler 2 | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 131072 |
+| 0100DD301A686000 | Lollipop Chainsaw RePop | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 589824 |
+| 010047E01EA24000 | Star Overdrive | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 327680 |
+| 01006F301AE9C000 | Grounded | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 786432 |
