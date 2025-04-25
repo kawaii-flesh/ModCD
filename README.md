@@ -29,6 +29,8 @@
 Если вам понравился мод, то не забудьте поблагодарить его автора
 
 - ECLIPSE00074
+- \_ZolMik\_ ([страница с информацией для донатов](https://github.com/kawaii-flesh/ModCD-Donations/blob/master/_ZolMik_.md))
+- Vetal580
 
 ## FAQ (которые никто не задавал)
 
