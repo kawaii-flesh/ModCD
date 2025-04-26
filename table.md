@@ -75,3 +75,4 @@
 | 0100DD301A686000 | Lollipop Chainsaw RePop | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 589824 |
 | 010047E01EA24000 | Star Overdrive | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 327680 |
 | 01006F301AE9C000 | Grounded | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 786432 |
+| 0100F300169B6000 | GRIME | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 458752 |
