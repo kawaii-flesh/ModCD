@@ -31,6 +31,7 @@
 - ECLIPSE00074
 - \_ZolMik\_ ([страница с информацией для донатов](https://github.com/kawaii-flesh/ModCD-Donations/blob/master/_ZolMik_.md))
 - Vetal580
+- Sun
 
 ## FAQ (которые никто не задавал)
 
