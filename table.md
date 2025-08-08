@@ -81,3 +81,4 @@
 | 010069C01AB82000 | Shin Megami Tensei V: Vengeance | **Name**: Улучшение графики \+ 40 FPS<br>**Description**: DynRes<br>**Type**: gfx<br>**Author**: Sun<br>**Supported Versions**: 196608<br><br>**Name**: Улучшение графики \+ 40 FPS<br>**Description**: DynResOff<br>**Type**: gfx<br>**Author**: Sun<br>**Supported Versions**: 196608 |
 | 0100C1101EE5A000 | High on Life | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: Vetal580<br>**Supported Versions**: 131072 |
 | 010083A018262000 | Hitman: Blood Money — Reprisal | **Name**: 60 кадров, улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 65536 |
+| 0100927023A34000 | SOMA | **Name**: Разрешение и 60 кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 196608 |
