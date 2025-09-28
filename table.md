@@ -84,3 +84,4 @@
 | 0100927023A34000 | SOMA | **Name**: Разрешение и 60 кадров<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 196608 |
 | 01004E401B3EA000 | SteamWorld Build | **Name**: Улучшение графики<br>**Description**: Для Erista<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 1048576<br><br>**Name**: Улучшение графики<br>**Description**: Для Mariko<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 1048576 |
 | 0100C1F0051B6000 | Donkey Kong Country: Tropical Freeze | **Name**: Небольшое улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072 |
+| 01006E001823C000 | Sonic Racing: CrossWorlds | **Name**: Улучшение графики<br>**Type**: gfx<br>**Author**: ECLIPSE00074<br>**Supported Versions**: 131072 |
