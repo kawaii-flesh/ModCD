@@ -22,6 +22,7 @@ GamesListView::GamesListView(app::ModCD &aModCD)
       totalUpdateSize(0) {
     this->updateDS.toStop = false;
     this->updateDS.totalSize = 0;
+    this->updateDS.alreadyDownloaded = 0;
     this->loadingView = new LoadingView();
     this->addView(this->loadingView);
     brls::async([this]() {

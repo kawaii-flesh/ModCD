@@ -21,11 +21,11 @@ class CURLException : public std::exception {
 class HttpRequester {
    private:
     void *curl;
+    static std::once_flag curlInitFlag;
     static std::mutex curlMutex;
 
    public:
-    HttpRequester() noexcept;
-
+    HttpRequester();
     ~HttpRequester();
 
     std::string getText(const std::string &url, long timeout = 5L) const;

@@ -461,6 +461,8 @@ ModView::ModView(app::ModCD &aModCD)
     this->flags.clearAll();
     dsMod.totalSize = 0;
     dsScreenshots.totalSize = 0;
+    dsMod.alreadyDownloaded = 0;
+    dsScreenshots.alreadyDownloaded = 0;
 
     if (this->modCD.isOnlineMode()) {
         this->prepareOnline();

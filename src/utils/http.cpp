@@ -58,15 +58,29 @@ size_t writeCallbackToFile(void *contents, size_t size, size_t nmemb, void *user
 namespace utils {
 
 std::mutex HttpRequester::curlMutex;
+std::once_flag HttpRequester::curlInitFlag;
 
-HttpRequester::HttpRequester() noexcept {
-    curl_global_init(CURL_GLOBAL_DEFAULT);
+struct CurlGlobalGuard {
+    CurlGlobalGuard() { curl_global_init(CURL_GLOBAL_DEFAULT); }
+    ~CurlGlobalGuard() { curl_global_cleanup(); }
+};
+
+static CurlGlobalGuard globalCurl;
+
+HttpRequester::HttpRequester() {
+    std::call_once(curlInitFlag, []() { curl_global_init(CURL_GLOBAL_DEFAULT); });
+
     curl = curl_easy_init();
+    if (!curl) {
+        throw CURLException();
+    }
 }
 
 HttpRequester::~HttpRequester() {
-    curl_easy_cleanup(curl);
-    curl_global_cleanup();
+    if (curl) {
+        curl_easy_cleanup(curl);
+        curl = nullptr;
+    }
 }
 
 std::string HttpRequester::getFullUrl(const std::string &baseUrl, const std::string &url) {

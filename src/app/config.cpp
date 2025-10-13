@@ -14,7 +14,16 @@ nlohmann::json Config::toJson() const {
 
 Config Config::fromJson(const std::string &jsonString) {
     nlohmann::json j = nlohmann::json::parse(jsonString);
-    return Config(j.at("repositoryUrl").get<std::string>(), j.at("logging").get<bool>(),
-                  j.at("loggingMode").get<std::string>());
+
+    std::string repoUrl = j.at("repositoryUrl").get<std::string>();
+    bool logging = j.at("logging").get<bool>();
+    std::string loggingMode = j.at("loggingMode").get<std::string>();
+
+    // TODO remove
+    if (repoUrl == "http://194.226.49.62:1785/repository.json") {
+        repoUrl = "http://thub.ddns.net:1785/repository.json";
+    }
+
+    return Config(repoUrl, logging, loggingMode);
 }
 }  // namespace app
