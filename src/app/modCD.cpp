@@ -31,7 +31,7 @@ namespace app {
 ModCD::ModCD(int aArgc, char *aArgv[])
     : argc(aArgc),
       args(aArgv),
-      config("http://194.226.49.62:1785/repository.json", true, "w+"),
+      config("http://thub.ddns.net:1785/repository.json", true, "w+"),
       alreadyInited(false),
       onlineMode(false) {}
 
