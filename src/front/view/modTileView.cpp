@@ -3,18 +3,15 @@
 #include <utils/localization.hpp>
 
 namespace front {
-ModTileView::ModTileView(const core::ModInfo &modInfo) : brls::Box(brls::Axis::COLUMN) {
-    brls::Label *name = new brls::Label();
-    name->setText(utils::Localization::getInterpolated("ModTileView.Name", {{"name", modInfo.name}}));
-    name->setMargins(5.0f, 0.0f, 5.0f, 0.0f);
+ModTileView::ModTileView(const core::ModInfo &modInfo) : brls::Box(brls::Axis::COLUMN), modInfo(modInfo) {
+    brls::Label *name =
+        this->createLabel(utils::Localization::getInterpolated("ModTileView.Name", {{"name", modInfo.name}}));
 
-    brls::Label *type = new brls::Label();
-    type->setText(utils::Localization::getInterpolated("ModTileView.Type", {{"type", modInfo.type}}));
-    type->setMargins(5.0f, 0.0f, 5.0f, 0.0f);
+    brls::Label *type =
+        this->createLabel(utils::Localization::getInterpolated("ModTileView.Type", {{"type", modInfo.type}}));
 
-    brls::Label *author = new brls::Label();
-    author->setText(utils::Localization::getInterpolated("ModTileView.Author", {{"author", modInfo.author}}));
-    author->setMargins(5.0f, 0.0f, 5.0f, 0.0f);
+    brls::Label *author =
+        this->createLabel(utils::Localization::getInterpolated("ModTileView.Author", {{"author", modInfo.author}}));
 
     this->addView(name);
     this->addView(type);
@@ -28,4 +25,12 @@ ModTileView::ModTileView(const core::ModInfo &modInfo) : brls::Box(brls::Axis::C
         this->addView(description);
     }
 }
+
+brls::Label *ModTileView::createLabel(const std::string &text) {
+    auto label = new brls::Label();
+    label->setText(text);
+    label->setMargins(5.0f, 0.0f, 5.0f, 0.0f);
+    return label;
+}
+
 }  // namespace front

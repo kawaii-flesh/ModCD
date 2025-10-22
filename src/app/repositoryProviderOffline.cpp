@@ -14,27 +14,18 @@ std::unique_ptr<core::Repository> RepositoryProviderOffline::getRepository() {
     std::string offlineString = "offline";
     std::vector<core::RepContent> contents;
 
-    for (const std::string &filePath : this->modCD.getMergedInfoFiles()) {
-        try {
-            std::string jsonContent = utils::readFile(filePath);
+    for (core::MergedInfo &mergedInfo : this->modCD.getMergedInfoObjects()) {
+        auto existingRepContent = std::find_if(
+            contents.begin(), contents.end(),
+            [&mergedInfo](const core::RepContent &repContent) { return repContent.titleId == mergedInfo.titleId; });
 
-            core::MergedInfo mergedInfo = core::MergedInfo::fromJson(jsonContent);
-
-            auto existingRepContent = std::find_if(
-                contents.begin(), contents.end(),
-                [&mergedInfo](const core::RepContent &repContent) { return repContent.titleId == mergedInfo.titleId; });
-
-            core::ModInfo modInfo(std::move(mergedInfo.name), std::move(mergedInfo.description),
-                                  std::move(mergedInfo.type), std::move(mergedInfo.author), mergedInfo.toJson().dump(),
-                                  std::vector<uint64_t>{mergedInfo.supportedVersion});
-            if (existingRepContent != contents.end()) {
-                existingRepContent->mods.push_back(std::move(modInfo));
-            } else {
-                contents.emplace_back(std::move(mergedInfo.titleId), std::string(offlineString),
-                                      std::vector<core::ModInfo>{modInfo});
-            }
-        } catch (const std::exception &ex) {
-            MODCD_LOG_ERROR("[{}]: Error processing file '{}': {}", __PRETTY_FUNCTION__, filePath, ex.what());
+        core::ModInfo modInfo(mergedInfo.name, mergedInfo.description, mergedInfo.type, mergedInfo.author,
+                              mergedInfo.toJson().dump(), std::vector<uint64_t>{mergedInfo.supportedVersion});
+        if (existingRepContent != contents.end()) {
+            existingRepContent->mods.push_back(std::move(modInfo));
+        } else {
+            contents.emplace_back(std::string(mergedInfo.titleId), std::string(offlineString),
+                                  std::vector<core::ModInfo>{modInfo});
         }
     }
 

@@ -3,16 +3,18 @@
 #include <app/modCD.hpp>
 #include <borealis.hpp>
 #include <front/view/modsListView.hpp>
+#include <front/interfaces/iUpdatable.hpp>
 
 namespace front {
 class ModsListActivity : public brls::Activity {
    private:
     app::ModCD &modCD;
     const core::Game &game;
+    IUpdatable *parentUpdatable;
     ModsListView *modsRep;
 
    public:
-    ModsListActivity(app::ModCD &aModCD, const core::Game &aGame) noexcept;
+    ModsListActivity(app::ModCD &aModCD, const core::Game &aGame, IUpdatable *aParentUpdatable) noexcept;
 
     ~ModsListActivity();
 

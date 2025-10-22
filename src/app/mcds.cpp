@@ -9,7 +9,9 @@
 
 namespace app {
 
-MCDS::MCDS(std::filesystem::path &&aWorkingDirectory) noexcept : workingDirectory(std::move(aWorkingDirectory)) {}
+void MCDS::setWorkingDirectory(std::filesystem::path &&aWorkingDirectory) noexcept {
+    this->workingDirectory = std::move(aWorkingDirectory);
+}
 
 std::filesystem::path MCDS::getRelativePath(const std::filesystem::path &path) const {
     if (path.is_absolute()) {

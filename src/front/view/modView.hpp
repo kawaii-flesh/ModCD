@@ -24,7 +24,6 @@ enum Flags : uint32_t {
 class ModView : public brls::Box {
    private:
     app::ModCD &modCD;
-    std::unique_ptr<app::MCDS> mcds;
     utils::DownloadState dsMod;
     utils::DownloadState dsScreenshots;
 
@@ -103,8 +102,6 @@ class ModView : public brls::Box {
 
     void setFSOState(brls::Button *button, const std::string &buttonText);
     void unsetFSOState(brls::Button *button, const std::string &buttonText);
-
-    void saveMergedInfo();
 
     void setFlagsAndUpdateButtons(uint32_t flagsToSet);
     void clearFlagsAndUpdateButtons(uint32_t flagsToClear);

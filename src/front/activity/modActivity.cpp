@@ -1,10 +1,12 @@
 #include "modActivity.hpp"
 
 #include <utils/utils.hpp>
+#include <utils/localization.hpp>
 
 namespace front {
 
-ModActivity::ModActivity(app::ModCD &aModCD) noexcept : modCD(aModCD) {
+ModActivity::ModActivity(app::ModCD &aModCD, IUpdatable *parentUpdatable) noexcept
+    : modCD(aModCD), parentUpdatable(parentUpdatable) {
     this->modView = new ModView(this->modCD);
     MODCD_LOG_DEBUG("[{}]: created", __PRETTY_FUNCTION__);
 }
@@ -24,6 +26,8 @@ void ModActivity::onContentAvailable() {
                                                          Flags::STOPPING_IN_PROGRESS | Flags::FSO_IN_PROGRESS)) {
                 return false;
             } else {
+                this->modCD.updateMergedInfoObjects();
+                this->parentUpdatable->updateUI();
                 brls::Application::popActivity(brls::TransitionAnimation::NONE);
             }
             return true;

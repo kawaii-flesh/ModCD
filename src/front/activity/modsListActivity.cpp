@@ -4,8 +4,8 @@
 
 namespace front {
 
-ModsListActivity::ModsListActivity(app::ModCD &aModCD, const core::Game &aGame) noexcept
-    : modCD(aModCD), game(aGame), modsRep(new ModsListView(modCD, game)) {
+ModsListActivity::ModsListActivity(app::ModCD &aModCD, const core::Game &aGame, IUpdatable *aParentUpdatable) noexcept
+    : modCD(aModCD), game(aGame), modsRep(new ModsListView(modCD, game)), parentUpdatable(aParentUpdatable) {
     MODCD_LOG_DEBUG("[{}]: created - titleId: {}", __PRETTY_FUNCTION__, aGame.titleIDToString());
 }
 
@@ -18,7 +18,8 @@ brls::View *ModsListActivity::createContentView() { return this->modsRep; }
 void ModsListActivity::onContentAvailable() {
     this->registerAction(
         "Go to games", brls::ControllerButton::BUTTON_B,
-        [](brls::View *view) {
+        [this](brls::View *view) {
+            this->parentUpdatable->updateUI();
             brls::Application::popActivity(brls::TransitionAnimation::NONE);
             return true;
         },

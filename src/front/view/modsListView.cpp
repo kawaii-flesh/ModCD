@@ -67,7 +67,8 @@ void ModsListView::addRows(std::list<core::ModInfo> &modInfos) {
                 if (modEntryIt != mod.files.end()) {
                     this->modCD.setCurrentModInfo(modInfo);
                     this->modCD.setCurrentModEntry(*modEntryIt);
-                    brls::Application::pushActivity(new ModActivity(this->modCD), brls::TransitionAnimation::NONE);
+                    brls::Application::pushActivity(new ModActivity(this->modCD, this),
+                                                    brls::TransitionAnimation::NONE);
                 } else {
                     MODCD_LOG_DEBUG("[{}]: there are no files for the current version - version: {}",
                                     __PRETTY_FUNCTION__, this->game.version);
@@ -80,7 +81,8 @@ void ModsListView::addRows(std::list<core::ModInfo> &modInfos) {
                     modEntry.sha256 = std::move(mergedInfo.hash);
                     this->modCD.setCurrentModInfo(modInfo);
                     this->modCD.setCurrentModEntry(modEntry);
-                    brls::Application::pushActivity(new ModActivity(this->modCD), brls::TransitionAnimation::NONE);
+                    brls::Application::pushActivity(new ModActivity(this->modCD, this),
+                                                    brls::TransitionAnimation::NONE);
                 } catch (const std::exception &e) {
                     MODCD_LOG_DEBUG("[{}]: Exception occured: {}", __PRETTY_FUNCTION__, e.what());
                 }
@@ -92,5 +94,60 @@ void ModsListView::addRows(std::list<core::ModInfo> &modInfos) {
         row->addView(button);
         row->setAlignItems(brls::AlignItems::FLEX_START);
     }
+    this->updateModTiles();
 }
+
+void ModsListView::updateModTiles() {
+    const std::list<core::MergedInfo> &mergedInfoObjects = this->modCD.getMergedInfoObjects();
+
+    for (brls::View *rowView : this->scrollingContent->getChildren()) {
+        brls::Box *row = dynamic_cast<brls::Box *>(rowView);
+        if (!row) {
+            continue;
+        }
+
+        for (brls::View *buttonView : row->getChildren()) {
+            brls::Button *button = dynamic_cast<brls::Button *>(buttonView);
+            if (!button) {
+                continue;
+            }
+
+            for (brls::View *childView : button->getChildren()) {
+                ModTileView *modTileView = dynamic_cast<ModTileView *>(childView);
+                if (!modTileView) {
+                    continue;
+                }
+
+                auto it = std::find_if(
+                    mergedInfoObjects.begin(), mergedInfoObjects.end(), [&modTileView](const core::MergedInfo &info) {
+                        return info.name == modTileView->modInfo.name &&
+                               info.description == modTileView->modInfo.description &&
+                               info.type == modTileView->modInfo.type && info.author == modTileView->modInfo.author;
+                    });
+
+                if (it != mergedInfoObjects.end()) {
+                    switch (it->status) {
+                        case core::EnvironmentStatus::MOD_DOWNLOADED:
+                            button->setBorderColor(MCDBlue);
+                            break;
+                        case core::EnvironmentStatus::INSTALLED:
+                            button->setBorderColor(MCDGreen);
+                            break;
+                        case core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED:
+                            button->setBorderColor(MCDYellow);
+                            break;
+                        default:
+                            button->setBorderColor(MCDGrey);
+                            break;
+                    }
+                    button->setBorderThickness(8.0f);
+                } else {
+                    button->setBorderThickness(0.0f);
+                }
+            }
+        }
+    }
+}
+
+void ModsListView::updateUI() { this->updateModTiles(); }
 }  // namespace front

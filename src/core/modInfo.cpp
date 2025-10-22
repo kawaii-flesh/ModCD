@@ -12,8 +12,25 @@ ModInfo::ModInfo(std::string &&aName, std::string &&aDescription, std::string &&
       url(std::move(aUrl)),
       supportedVersions(std::move(aSupportedVersions)) {}
 
+ModInfo::ModInfo(const std::string &aName, const std::string &aDescription, const std::string &aType,
+                 const std::string &aAuthor, const std::string &aUrl,
+                 const std::vector<uint64_t> &aSupportedVersions) noexcept
+    : name(aName),
+      description(aDescription),
+      type(aType),
+      author(aAuthor),
+      url(aUrl),
+      supportedVersions(aSupportedVersions) {}
+
 ModInfo ModInfo::fromJson(const nlohmann::json &j) {
-    return ModInfo(j.at("name"), j.at("description"), j.at("type"), j.at("author"), j.at("url"),
-                   j.at("supportedVersions"));
+    std::string name = j.value("name", "");
+    std::string description = j.value("description", "");
+    std::string type = j.value("type", "");
+    std::string author = j.value("author", "");
+    std::string url = j.value("url", "");
+    std::vector<uint64_t> supportedVersions = j.value("supportedVersions", std::vector<uint64_t>{});
+
+    return ModInfo(std::move(name), std::move(description), std::move(type), std::move(author), std::move(url),
+                   std::move(supportedVersions));
 }
 }  // namespace core

@@ -1,6 +1,5 @@
 #include "modView.hpp"
 
-#include <app/mcds.hpp>
 #include <app/modCD.hpp>
 #include <borealis.hpp>
 #include <core/game.hpp>
@@ -93,7 +92,7 @@ utils::DownloadingResult ModView::downloadModAndMCDS() {
         if (result != utils::DownloadingResult::OK) {
             utils::removeAndEmpty(this->modCD.getMcdsPath());
         } else {
-            this->saveMergedInfo();
+            this->modCD.saveMergedInfo(core::EnvironmentStatus::MOD_DOWNLOADED);
         }
     }
 
@@ -162,9 +161,10 @@ bool ModView::clearModAction() {
         std::lock_guard<std::mutex> guard(asyncMutex);
         brls::sync([this]() { setFSOState(this->clearModBtn, this->clearingText); });
         utils::removeAndEmpty(this->modCD.getDownloadModPathArchive());
-        if (!this->mcds->isModInstalledByUninstallPaths()) {
+        if (!this->modCD.getMcds()->isModInstalledByUninstallPaths()) {
             utils::removeAndEmpty(this->modCD.getMcdsPath());
         }
+        this->modCD.saveMergedInfo(core::EnvironmentStatus::MOD_CLEANED);
         brls::sync([this]() {
             unsetFSOState(this->clearModBtn, this->clearText);
 
@@ -220,7 +220,6 @@ utils::DownloadingResult ModView::checkScreenshotsArchive() {
         utils::removeAndEmpty(screenshotsPath);
         return utils::DownloadingResult::ERROR;
     } else {
-        this->saveMergedInfo();
         return utils::DownloadingResult::OK;
     }
 }
@@ -261,6 +260,7 @@ bool ModView::screenshotsAction() {
             result = this->modCD.downloadScreenshots(&this->dsScreenshots);
             this->flags.clearFlags(Flags::SCREENSHOTS_DOWNLOADING_IN_PROGRESS);
             if (result == utils::DownloadingResult::OK) {
+                this->modCD.saveMergedInfo(core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED);
                 brls::sync([this]() {
                     this->toast->start(utils::Localization::get("ModView.Toast.ScreenshotsArchiveHasBeenDownloaded"),
                                        ToastColor::OK);
@@ -300,6 +300,7 @@ bool ModView::clearScreenshotsAction() {
         std::lock_guard<std::mutex> guard(asyncMutex);
         brls::sync([this]() { setFSOState(this->clearScreenshotsBtn, this->clearingText); });
         utils::removeAndEmpty(this->modCD.getSHDownloadDirectoryPath());
+        this->modCD.saveMergedInfo(core::EnvironmentStatus::SCREENSHOTS_CLEANED);
         brls::sync([this]() {
             unsetFSOState(this->clearScreenshotsBtn, this->clearText);
 
@@ -313,7 +314,8 @@ bool ModView::installAction() {
     brls::async([this]() {
         std::lock_guard<std::mutex> guard(asyncMutex);
         brls::sync([this]() { setFSOState(this->installBtn, this->installingText); });
-        this->mcds->executeRule("install");
+        this->modCD.getMcds()->executeRule("install");
+        this->modCD.saveMergedInfo(core::EnvironmentStatus::INSTALLED);
         brls::sync([this]() {
             unsetFSOState(this->installBtn, this->installText);
 
@@ -327,7 +329,8 @@ bool ModView::uninstallAction() {
     brls::async([this]() {
         std::lock_guard<std::mutex> guard(asyncMutex);
         brls::sync([this]() { setFSOState(this->uninstallBtn, this->uninstallingText); });
-        this->mcds->executeRule("uninstall");
+        this->modCD.getMcds()->executeRule("uninstall");
+        this->modCD.saveMergedInfo(core::EnvironmentStatus::UNINSTALLED);
         brls::sync([this]() {
             bool isModDownloaded = this->modCD.isModDownloaded();
             if (!isModDownloaded) {
@@ -338,14 +341,6 @@ bool ModView::uninstallAction() {
         });
     });
     return true;
-}
-
-void ModView::saveMergedInfo() {
-    const core::ModInfo &modInfo = this->modCD.getCurrentModInfo();
-    const core::ModEntry &modEntry = this->modCD.getCurrentModEntry();
-    core::MergedInfo mergedInfo(modInfo.name, modInfo.description, modInfo.type, modInfo.author, modEntry.gameVersion,
-                                this->modCD.getCurrentTitleId(), modEntry.sha256);
-    utils::saveJsonToFile(this->modCD.getMergedInfoPath(), mergedInfo.toJson());
 }
 
 void ModView::setFlagsAndUpdateButtons(uint32_t flagsToSet) {
@@ -402,9 +397,6 @@ void ModView::prepareOnline() {
         this->clearScreenshotsBtn->setVisibility(brls::Visibility::GONE);
     }
 
-    if (this->modCD.isMcdsExists() || this->modCD.isScreenshotsDownloaded()) {
-        this->saveMergedInfo();
-    }
     this->downloadModBtn->registerClickAction([this](brls::View *view) { return downloadModAction(); });
 }
 
@@ -438,7 +430,7 @@ ModView::ModView(app::ModCD &aModCD)
       loadingText(utils::Localization::get("ModView.ModButton.Loading")),
       clearingText(utils::Localization::get("ModView.CommonButton.Clearing")),
       extractingText(utils::Localization::get("ModView.ScreenshotsButton.Extracting")) {
-    this->mcds = std::make_unique<app::MCDS>(this->modCD.getDownloadModPathDir());
+    this->modCD.setMCDSWorkingDir();
     this->input = brls::Application::getPlatform()->getInputManager();
 
     this->description = new brls::ScrollingFrame();
@@ -466,9 +458,6 @@ ModView::ModView(app::ModCD &aModCD)
 
     if (this->modCD.isOnlineMode()) {
         this->prepareOnline();
-        if (this->modCD.isMcdsExists() || this->modCD.isScreenshotsDownloaded()) {
-            this->saveMergedInfo();
-        }
     } else {
         this->prepareOffline();
     }
@@ -581,7 +570,7 @@ void ModView::updateButtonsByContent() {
 
     this->installBtn->setState((isModDownloaded && isMCDSDownloaded) ? brls::ButtonState::ENABLED
                                                                      : brls::ButtonState::DISABLED);
-    this->uninstallBtn->setState((isMCDSDownloaded && this->mcds->isModInstalledByUninstallPaths())
+    this->uninstallBtn->setState((isMCDSDownloaded && this->modCD.getMcds()->isModInstalledByUninstallPaths())
                                      ? brls::ButtonState::ENABLED
                                      : brls::ButtonState::DISABLED);
 

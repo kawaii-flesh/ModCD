@@ -189,7 +189,8 @@ void GamesListView::addIconsRow() {
         gameTileView->registerClickAction([this, &game](brls::View *view) {
             MODCD_LOG_DEBUG("Icon was clicked: {}", game.name);
             this->modCD.setCurrentTitleId(game.titleIDToString());
-            brls::Application::pushActivity(new ModsListActivity(this->modCD, game), brls::TransitionAnimation::NONE);
+            brls::Application::pushActivity(new ModsListActivity(this->modCD, game, this),
+                                            brls::TransitionAnimation::NONE);
             return true;
         });
 
@@ -198,7 +199,68 @@ void GamesListView::addIconsRow() {
 
         count++;
     }
+    this->updateGameIconsStatuses();
 }
+
+void GamesListView::updateGameIconsStatuses() {
+    const std::list<core::MergedInfo>& mergedInfoObjects = this->modCD.getMergedInfoObjects();
+
+    for (brls::View* rowView : this->listContent->getChildren()) {
+        brls::Box* row = dynamic_cast<brls::Box*>(rowView);
+        if (!row)
+            continue;
+
+        for (brls::View* childView : row->getChildren()) {
+            GameTileView* gameTileView = dynamic_cast<GameTileView*>(childView);
+            if (!gameTileView)
+                continue;
+
+            std::vector<core::EnvironmentStatus> statuses;
+            for (const auto& info : mergedInfoObjects) {
+                if (info.titleId == gameTileView->game.titleIDToString()) {
+                    statuses.push_back(info.status);
+                }
+            }
+
+            if (statuses.empty()) {
+                gameTileView->setBorderThickness(0.0f);
+                continue;
+            }
+
+            auto priority = [](core::EnvironmentStatus s) {
+                switch (s) {
+                    case core::EnvironmentStatus::INSTALLED: return 3;
+                    case core::EnvironmentStatus::MOD_DOWNLOADED: return 2;
+                    case core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED: return 1;
+                    default: return 0;
+                }
+            };
+
+            core::EnvironmentStatus topStatus = *std::max_element(
+                statuses.begin(), statuses.end(),
+                [&priority](auto a, auto b) { return priority(a) < priority(b); });
+
+            switch (topStatus) {
+                case core::EnvironmentStatus::INSTALLED:
+                    gameTileView->setBorderColor(MCDGreen);
+                    break;
+                case core::EnvironmentStatus::MOD_DOWNLOADED:
+                    gameTileView->setBorderColor(MCDBlue);
+                    break;
+                case core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED:
+                    gameTileView->setBorderColor(MCDYellow);
+                    break;
+                default:
+                    gameTileView->setBorderColor(MCDGrey);
+                    break;
+            }
+
+            gameTileView->setBorderThickness(8.0f);
+        }
+    }
+}
+
+void GamesListView::updateUI() { this->updateGameIconsStatuses(); }
 
 void GamesListView::resortIconsRow() {
     int n = 3;

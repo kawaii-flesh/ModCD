@@ -59,13 +59,14 @@ void ModCD::init() {
         return;
     }
 
-    this->mergedInfoFiles = this->collectMergedInfoFiles(modcdDirectory);
     if (this->onlineMode) {
         repositoryProvider = std::make_unique<RepositoryProviderOnline>(this->config, this->httpRequester);
     } else {
         repositoryProvider = std::make_unique<RepositoryProviderOffline>(*this);
     }
+    this->mcds = std::make_unique<app::MCDS>();
 
+    this->updateMergedInfoObjects();
     this->repository = this->repositoryProvider->getRepository();
     std::list<core::Game> games = utils::exists(stubPath) ? this->getGamesFromStub() : this->getInstalledGames();
 
@@ -334,8 +335,6 @@ void ModCD::setIsOnlineMode(bool onlineMode) noexcept { this->onlineMode = onlin
 
 const std::string &ModCD::getCurrentTitleId() const noexcept { return this->currentTitleId; }
 
-std::list<std::filesystem::path> &ModCD::getMergedInfoFiles() noexcept { return this->mergedInfoFiles; }
-
 const Config &ModCD::getConfig() noexcept { return this->config; }
 
 void ModCD::collectMergedInfoFiles(const std::filesystem::path &directoryPath,
@@ -377,4 +376,88 @@ std::list<std::filesystem::path> ModCD::collectMergedInfoFiles(const std::filesy
     collectMergedInfoFiles(rootPath, result);
     return result;
 }
+
+std::list<core::MergedInfo> &ModCD::getMergedInfoObjects() noexcept { return this->mergedInfoObjects; }
+
+void ModCD::updateMergedInfoObjects() {
+    MODCD_LOG_DEBUG("[{}]: Called", __PRETTY_FUNCTION__);
+
+    this->mergedInfoObjects.clear();
+
+    auto files = this->collectMergedInfoFiles(modcdDirectory);
+    MODCD_LOG_DEBUG("[{}]: Found {} merged info files", __PRETTY_FUNCTION__, files.size());
+
+    for (const std::string &filePath : files) {
+        try {
+            MODCD_LOG_DEBUG("[{}]: Processing file '{}'", __PRETTY_FUNCTION__, filePath);
+
+            std::string jsonContent = utils::readFile(filePath);
+            core::MergedInfo mergedInfo = core::MergedInfo::fromJson(jsonContent);
+
+            MODCD_LOG_DEBUG("[{}]: Successfully parsed MergedInfo — name: '{}', titleId: '{}', status: {}",
+                            __PRETTY_FUNCTION__, mergedInfo.name, mergedInfo.titleId,
+                            static_cast<int>(mergedInfo.status));
+
+            this->mergedInfoObjects.push_back(std::move(mergedInfo));
+        } catch (const std::exception &ex) {
+            MODCD_LOG_ERROR("[{}]: Error processing file '{}': {}", __PRETTY_FUNCTION__, filePath, ex.what());
+        }
+    }
+
+    MODCD_LOG_DEBUG("[{}]: Finished updating mergedInfoObjects (total = {})", __PRETTY_FUNCTION__,
+                    this->mergedInfoObjects.size());
+}
+
+void ModCD::saveMergedInfo(core::EnvironmentStatus targetStatus) {
+    const core::ModInfo &modInfo = this->getCurrentModInfo();
+    const core::ModEntry &modEntry = this->getCurrentModEntry();
+
+    const std::filesystem::path mergedInfoPath = this->getMergedInfoPath();
+    core::EnvironmentStatus currentStatus = core::EnvironmentStatus::NONE;
+    if (utils::exists(mergedInfoPath)) {
+        const core::MergedInfo currentMergedInfo = core::MergedInfo::fromJson(utils::readFile(mergedInfoPath));
+        currentStatus = currentMergedInfo.status;
+    }
+
+    core::EnvironmentStatus newStatus = core::EnvironmentStatus::NONE;
+    if (currentStatus == core::EnvironmentStatus::NONE || targetStatus == core::EnvironmentStatus::INSTALLED) {
+        newStatus = targetStatus;
+    } else {
+        if (targetStatus == core::EnvironmentStatus::UNINSTALLED) {
+            if (this->isMcdsExists() && this->isModDownloaded()) {
+                newStatus = core::EnvironmentStatus::MOD_DOWNLOADED;
+            } else if (this->isScreenshotsDownloaded()) {
+                newStatus = core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED;
+            }
+        } else if (targetStatus != core::EnvironmentStatus::UNINSTALLED &&
+                   currentStatus == core::EnvironmentStatus::INSTALLED) {
+            newStatus = core::EnvironmentStatus::INSTALLED;
+        } else if (targetStatus == core::EnvironmentStatus::MOD_DOWNLOADED) {
+            newStatus = core::EnvironmentStatus::MOD_DOWNLOADED;
+        } else if (targetStatus == core::EnvironmentStatus::MOD_CLEANED) {
+            if (this->isScreenshotsDownloaded()) {
+                newStatus = core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED;
+            }
+        } else if (targetStatus == core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED) {
+            if (currentStatus != core::EnvironmentStatus::MOD_DOWNLOADED) {
+                newStatus = core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED;
+            } else {
+                newStatus = core::EnvironmentStatus::MOD_DOWNLOADED;
+            }
+        } else if (targetStatus == core::EnvironmentStatus::SCREENSHOTS_CLEANED) {
+            if (currentStatus == core::EnvironmentStatus::MOD_DOWNLOADED) {
+                newStatus = core::EnvironmentStatus::MOD_DOWNLOADED;
+            }
+        }
+    }
+    core::MergedInfo mergedInfo(modInfo.name, modInfo.description, modInfo.type, modInfo.author, modEntry.gameVersion,
+                                this->getCurrentTitleId(), modEntry.sha256, newStatus);
+
+    utils::saveJsonToFile(this->getMergedInfoPath(), mergedInfo.toJson());
+}
+
+std::unique_ptr<app::MCDS> &ModCD::getMcds() noexcept { return mcds; }
+
+void ModCD::setMCDSWorkingDir() noexcept { this->mcds->setWorkingDirectory(this->getDownloadModPathDir()); }
+
 }  // namespace app

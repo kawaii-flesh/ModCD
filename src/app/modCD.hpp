@@ -5,24 +5,27 @@
 #include <core/game.hpp>
 #include <core/mod.hpp>
 #include <core/repository.hpp>
+#include <core/mergedInfo.hpp>
 #include <filesystem>
 #include <list>
 #include <memory>
 #include <string>
 #include <utils/http.hpp>
+#include <app/mcds.hpp>
 
 namespace app {
 class ModCD {
    private:
     std::unique_ptr<core::Repository> repository;
     std::unique_ptr<RepositoryProvider> repositoryProvider;
+    std::unique_ptr<app::MCDS> mcds;
     std::string currentTitleId;
     core::ModInfo currentModInfo;
     core::ModEntry currentModEntry;
     Config config;
     bool alreadyInited;
     bool onlineMode;
-    std::list<std::filesystem::path> mergedInfoFiles;
+    std::list<core::MergedInfo> mergedInfoObjects;
     int argc;
     char **args;
 
@@ -67,13 +70,18 @@ class ModCD {
     const core::ModEntry &getCurrentModEntry() const noexcept;
     bool isOnlineMode() const noexcept;
     const std::string &getCurrentTitleId() const noexcept;
-    std::list<std::filesystem::path> &getMergedInfoFiles() noexcept;
     const Config &getConfig() noexcept;
+    void updateMergedInfoObjects();
+    std::list<core::MergedInfo> &getMergedInfoObjects() noexcept;
+    void saveMergedInfo(core::EnvironmentStatus targetStatus);
+    std::unique_ptr<app::MCDS>& getMcds() noexcept;
+    void setMCDSWorkingDir() noexcept;
 
-   private:
+    private:
     core::Repository &getRepository();
     std::list<core::Game> getGamesFromStub();
     std::list<core::Game> getInstalledGames();
+    std::list<std::filesystem::path> &getMergedInfoFiles() noexcept;
     void collectMergedInfoFiles(const std::filesystem::path &directoryPath, std::list<std::filesystem::path> &result);
     std::list<std::filesystem::path> collectMergedInfoFiles(const std::filesystem::path &rootPath);
     void setIsOnlineMode(bool onlineMode) noexcept;

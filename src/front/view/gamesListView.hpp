@@ -3,6 +3,7 @@
 #include <app/modCD.hpp>
 #include <borealis.hpp>
 #include <core/game.hpp>
+#include <front/interfaces/iUpdatable.hpp>
 #include <front/view/gameTileView.hpp>
 #include <front/view/lineEdit.hpp>
 #include <front/view/loadingView.hpp>
@@ -12,7 +13,7 @@
 #include <string>
 
 namespace front {
-class GamesListView : public brls::Box {
+class GamesListView : public brls::Box, public IUpdatable {
    private:
     app::ModCD &modCD;
     brls::ScrollingFrame *list;
@@ -27,10 +28,12 @@ class GamesListView : public brls::Box {
     utils::DownloadState updateDS;
     long totalUpdateSize;
     const std::string initTextForLineEdit;
+    void updateUI() override;
 
    private:
     void onSearchTextChanged(const std::string &newText);
     void addIconsRow();
+    void updateGameIconsStatuses();
     void resortIconsRow();
     void draw(NVGcontext *vg, float x, float y, float width, float height, brls::Style style,
               brls::FrameContext *ctx) override;
