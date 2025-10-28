@@ -60,13 +60,6 @@ namespace utils {
 std::mutex HttpRequester::curlMutex;
 std::once_flag HttpRequester::curlInitFlag;
 
-struct CurlGlobalGuard {
-    CurlGlobalGuard() { curl_global_init(CURL_GLOBAL_DEFAULT); }
-    ~CurlGlobalGuard() { curl_global_cleanup(); }
-};
-
-static CurlGlobalGuard globalCurl;
-
 HttpRequester::HttpRequester() {
     std::call_once(curlInitFlag, []() { curl_global_init(CURL_GLOBAL_DEFAULT); });
 
