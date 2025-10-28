@@ -203,20 +203,22 @@ void GamesListView::addIconsRow() {
 }
 
 void GamesListView::updateGameIconsStatuses() {
-    const std::list<core::MergedInfo>& mergedInfoObjects = this->modCD.getMergedInfoObjects();
+    const std::list<core::MergedInfo> &mergedInfoObjects = this->modCD.getMergedInfoObjects();
 
-    for (brls::View* rowView : this->listContent->getChildren()) {
-        brls::Box* row = dynamic_cast<brls::Box*>(rowView);
-        if (!row)
+    for (brls::View *rowView : this->listContent->getChildren()) {
+        brls::Box *row = dynamic_cast<brls::Box *>(rowView);
+        if (!row) {
             continue;
+        }
 
-        for (brls::View* childView : row->getChildren()) {
-            GameTileView* gameTileView = dynamic_cast<GameTileView*>(childView);
-            if (!gameTileView)
+        for (brls::View *childView : row->getChildren()) {
+            GameTileView *gameTileView = dynamic_cast<GameTileView *>(childView);
+            if (!gameTileView) {
                 continue;
+            }
 
             std::vector<core::EnvironmentStatus> statuses;
-            for (const auto& info : mergedInfoObjects) {
+            for (const auto &info : mergedInfoObjects) {
                 if (info.titleId == gameTileView->game.titleIDToString()) {
                     statuses.push_back(info.status);
                 }
@@ -229,16 +231,19 @@ void GamesListView::updateGameIconsStatuses() {
 
             auto priority = [](core::EnvironmentStatus s) {
                 switch (s) {
-                    case core::EnvironmentStatus::INSTALLED: return 3;
-                    case core::EnvironmentStatus::MOD_DOWNLOADED: return 2;
-                    case core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED: return 1;
-                    default: return 0;
+                    case core::EnvironmentStatus::INSTALLED:
+                        return 3;
+                    case core::EnvironmentStatus::MOD_DOWNLOADED:
+                        return 2;
+                    case core::EnvironmentStatus::SCREENSHOTS_DOWNLOADED:
+                        return 1;
+                    default:
+                        return 0;
                 }
             };
 
             core::EnvironmentStatus topStatus = *std::max_element(
-                statuses.begin(), statuses.end(),
-                [&priority](auto a, auto b) { return priority(a) < priority(b); });
+                statuses.begin(), statuses.end(), [&priority](auto a, auto b) { return priority(a) < priority(b); });
 
             switch (topStatus) {
                 case core::EnvironmentStatus::INSTALLED:

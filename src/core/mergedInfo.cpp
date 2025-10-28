@@ -43,10 +43,14 @@ MergedInfo::MergedInfo(const std::string& modName, const std::string& descriptio
       status(status) {}
 
 nlohmann::json MergedInfo::toJson() const noexcept {
-    return nlohmann::json{
-        {"name", this->name},     {"description", this->description},           {"type", this->type},
-        {"author", this->author}, {"supportedVersion", this->supportedVersion}, {"titleId", this->titleId},
-        {"hash", this->hash},     {"status", EnvironmentStatusToString(this->status)}};
+    return nlohmann::json{{"name", this->name},
+                          {"description", this->description},
+                          {"type", this->type},
+                          {"author", this->author},
+                          {"supportedVersion", this->supportedVersion},
+                          {"titleId", this->titleId},
+                          {"hash", this->hash},
+                          {"status", EnvironmentStatusToString(this->status)}};
 }
 
 MergedInfo MergedInfo::fromJson(const std::string& jsonString) noexcept {

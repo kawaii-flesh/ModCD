@@ -1,17 +1,17 @@
 #pragma once
 
 #include <app/config.hpp>
+#include <app/mcds.hpp>
 #include <app/repositoryProvider.hpp>
 #include <core/game.hpp>
+#include <core/mergedInfo.hpp>
 #include <core/mod.hpp>
 #include <core/repository.hpp>
-#include <core/mergedInfo.hpp>
 #include <filesystem>
 #include <list>
 #include <memory>
 #include <string>
 #include <utils/http.hpp>
-#include <app/mcds.hpp>
 
 namespace app {
 class ModCD {
@@ -74,10 +74,10 @@ class ModCD {
     void updateMergedInfoObjects();
     std::list<core::MergedInfo> &getMergedInfoObjects() noexcept;
     void saveMergedInfo(core::EnvironmentStatus targetStatus);
-    std::unique_ptr<app::MCDS>& getMcds() noexcept;
+    std::unique_ptr<app::MCDS> &getMcds() noexcept;
     void setMCDSWorkingDir() noexcept;
 
-    private:
+   private:
     core::Repository &getRepository();
     std::list<core::Game> getGamesFromStub();
     std::list<core::Game> getInstalledGames();

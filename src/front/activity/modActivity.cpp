@@ -1,7 +1,7 @@
 #include "modActivity.hpp"
 
-#include <utils/utils.hpp>
 #include <utils/localization.hpp>
+#include <utils/utils.hpp>
 
 namespace front {
 

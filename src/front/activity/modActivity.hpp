@@ -2,8 +2,8 @@
 
 #include <app/modCD.hpp>
 #include <borealis.hpp>
-#include <front/view/modView.hpp>
 #include <front/interfaces/iUpdatable.hpp>
+#include <front/view/modView.hpp>
 
 namespace front {
 class ModActivity : public brls::Activity {

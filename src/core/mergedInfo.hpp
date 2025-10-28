@@ -28,7 +28,6 @@ class MergedInfo {
     EnvironmentStatus status;
 
    public:
-
     MergedInfo(const std::string& modName, const std::string& description, const std::string& modType,
                const std::string& modAuthor, const uint64_t supportedVersion, const std::string& gameTitleId,
                const std::string& hash, EnvironmentStatus status = EnvironmentStatus::NONE) noexcept;

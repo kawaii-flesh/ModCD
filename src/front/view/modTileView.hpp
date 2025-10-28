@@ -6,7 +6,8 @@
 namespace front {
 class ModTileView : public brls::Box {
    private:
-   brls::Label *createLabel(const std::string &text);
+    brls::Label *createLabel(const std::string &text);
+
    public:
     const core::ModInfo &modInfo;
     ModTileView(const core::ModInfo &modInfo);

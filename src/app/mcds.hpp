@@ -26,7 +26,6 @@ class MCDS {
     std::list<std::filesystem::path> getLastArgs(const std::string &rule) const;
 
    public:
-
     void executeRule(const std::string &rule) const;
     bool isModInstalledByUninstallPaths() const;
     void setWorkingDirectory(std::filesystem::path &&aWorkingDirectory) noexcept;
