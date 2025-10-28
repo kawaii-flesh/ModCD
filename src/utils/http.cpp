@@ -59,6 +59,7 @@ namespace utils {
 
 std::mutex HttpRequester::curlMutex;
 std::once_flag HttpRequester::curlInitFlag;
+std::once_flag HttpRequester::curlCleanUpFlag;
 
 HttpRequester::HttpRequester() {
     std::call_once(curlInitFlag, []() { curl_global_init(CURL_GLOBAL_DEFAULT); });
@@ -72,6 +73,7 @@ HttpRequester::HttpRequester() {
 HttpRequester::~HttpRequester() {
     if (curl) {
         curl_easy_cleanup(curl);
+        std::call_once(curlCleanUpFlag, []() { curl_global_cleanup(); });
         curl = nullptr;
     }
 }

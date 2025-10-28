@@ -22,6 +22,7 @@ class HttpRequester {
    private:
     void *curl;
     static std::once_flag curlInitFlag;
+    static std::once_flag curlCleanUpFlag;
     static std::mutex curlMutex;
 
    public:
