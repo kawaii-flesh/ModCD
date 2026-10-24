@@ -408,8 +408,13 @@ void trimLabelText(const std::string& currentText, brls::Label* lbl, size_t maxP
 }
 
 std::wstring to_wstring(const std::string& str) {
-    std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
-    return converter.from_bytes(str);
+    try {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        return converter.from_bytes(str);
+    } catch (const std::range_error&) {
+        MODCD_LOG_ERROR("[{}]: invalid UTF-8 ({} bytes), returning \"???\"", __PRETTY_FUNCTION__, str.size());
+        return L"???";
+    }
 }
 
 std::string to_string(const std::wstring& wstr) {

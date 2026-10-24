@@ -1,5 +1,7 @@
 #include "modCD.hpp"
 
+#include <zlib.h>
+
 #include <algorithm>
 #include <app/mcds.hpp>
 #include <app/repositoryProviderOffline.hpp>
@@ -126,6 +128,61 @@ std::list<core::Game> ModCD::getGamesFromStub() {
     return games;
 }
 
+// https://github.com/J-D-K/JKSV/pull/361
+bool decompressLanguageEntries(NacpStruct* nacp) {
+    auto* bytes = reinterpret_cast<std::uint8_t*>(nacp);
+
+    const std::uint8_t format = bytes[0x3215];
+    if (format == 0) {
+        return true;
+    }
+    if (format != 1) {
+        MODCD_LOG_ERROR("[{}]: unknown TitlesDataFormat={}", __PRETTY_FUNCTION__, format);
+        return false;
+    }
+
+    auto* langBytes = reinterpret_cast<std::uint8_t*>(nacp->lang);
+    const auto compressedSize = *reinterpret_cast<const std::uint16_t*>(langBytes);
+    if (compressedSize == 0 || compressedSize > 0x2FFE) {
+        MODCD_LOG_ERROR("[{}]: bad compressedSize={}", __PRETTY_FUNCTION__, compressedSize);
+        return false;
+    }
+    const auto* compressedData = langBytes + 2;
+
+    constexpr std::size_t kFullSize = 0x6000;
+    constexpr std::size_t kHalfSize = 0x3000;
+
+    std::uint8_t decompressed[kFullSize];
+
+    z_stream strm{};
+    strm.next_in = const_cast<Bytef*>(compressedData);
+    strm.avail_in = compressedSize;
+    strm.next_out = decompressed;
+    strm.avail_out = kFullSize;
+
+    if (inflateInit2(&strm, -15) != Z_OK) {
+        MODCD_LOG_ERROR("[{}]: inflateInit2 failed", __PRETTY_FUNCTION__);
+        return false;
+    }
+    const int ret = inflate(&strm, Z_FINISH);
+    const std::size_t produced = kFullSize - strm.avail_out;
+    inflateEnd(&strm);
+
+    if (ret != Z_STREAM_END && produced != kFullSize) {
+        MODCD_LOG_ERROR("[{}]: inflate ret={} produced={}", __PRETTY_FUNCTION__, ret, produced);
+        return false;
+    }
+    if (produced < kHalfSize) {
+        MODCD_LOG_ERROR("[{}]: produced too small = {}", __PRETTY_FUNCTION__, produced);
+        return false;
+    }
+
+    std::memcpy(nacp->lang, decompressed, kHalfSize);
+    bytes[0x3215] = 0;
+    MODCD_LOG_DEBUG("[{}]: decompressed NACP ({} -> {} bytes)", __PRETTY_FUNCTION__, compressedSize, produced);
+    return true;
+}
+
 std::list<core::Game> ModCD::getInstalledGames() {
     std::list<core::Game> games;
     MODCD_LOG_DEBUG("[{}]: start", __PRETTY_FUNCTION__);
@@ -143,6 +200,11 @@ std::list<core::Game> ModCD::getInstalledGames() {
             u64 appId = nsa.application_id;
             nsGetApplicationControlData(NsApplicationControlSource_Storage, appId, &cdata,
                                         sizeof(NsApplicationControlData), &actual_size);
+
+            if (!decompressLanguageEntries(&cdata.nacp)) {
+                MODCD_LOG_ERROR("[{}]: NACP decompress FAILED title={:#018x}", __PRETTY_FUNCTION__, appId);
+            }
+
             NacpLanguageEntry* langEntry;
             nacpGetLanguageEntry(&cdata.nacp, &langEntry);
 
