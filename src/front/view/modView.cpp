@@ -54,11 +54,7 @@ bool ModView::xAction() {
         brls::Application::giveFocus(this->description);
     } else {
         this->flags.clearFlags(Flags::SCROLL_MODE);
-        if (this->supported) {
-            brls::Application::giveFocus(this->downloadModBtn);
-        } else {
-            brls::Application::giveFocus(this->screenshotsBtn);
-        }
+        brls::Application::giveFocus(this->downloadModBtn);
     }
     return true;
 }
@@ -500,31 +496,27 @@ ModView::ModView(app::ModCD& aModCD, bool aSupported)
 
     this->addView(this->description);
 
-    if (this->supported) {
-        this->downloadModBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
-        this->downloadModBtn->setMinWidth(this->downloadModBtn->getWidth());
-        this->downloadsButtons->addView(this->downloadModBtn);
-        this->clearModBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
-        this->downloadsButtons->addView(this->clearModBtn);
-        this->clearModBtn->setWidth(120);
-    }
+    this->downloadModBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
+    this->downloadModBtn->setMinWidth(this->downloadModBtn->getWidth());
+    this->downloadsButtons->addView(this->downloadModBtn);
+    this->clearModBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
+    this->downloadsButtons->addView(this->clearModBtn);
+    this->clearModBtn->setWidth(120);
     this->clearScreenshotsBtn->setMargins(10.0f, 50.0f, 10.0f, 10.0f);
     this->clearScreenshotsBtn->setWidth(120);
     this->screenshotsButtons->addView(this->screenshotsBtn);
     this->screenshotsButtons->addView(this->clearScreenshotsBtn);
     this->buttons->addView(this->screenshotsButtons);
 
-    if (this->supported) {
-        this->buttons->addView(this->downloadsButtons);
-        this->installBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
-        this->installBtn->setWidth(140);
-        this->modButtons->addView(this->installBtn);
-        this->uninstallBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
-        this->uninstallBtn->setWidth(140);
-        this->modButtons->addView(this->uninstallBtn);
-        this->modButtons->setMargins(0.0f, 0.0f, 0.0f, 50.0f);
-        this->buttons->addView(this->modButtons);
-    }
+    this->buttons->addView(this->downloadsButtons);
+    this->installBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
+    this->installBtn->setWidth(140);
+    this->modButtons->addView(this->installBtn);
+    this->uninstallBtn->setMargins(10.0f, 10.0f, 10.0f, 10.0f);
+    this->uninstallBtn->setWidth(140);
+    this->modButtons->addView(this->uninstallBtn);
+    this->modButtons->setMargins(0.0f, 0.0f, 0.0f, 50.0f);
+    this->buttons->addView(this->modButtons);
 
     this->setAlignItems(brls::AlignItems::CENTER);
     this->setJustifyContent(brls::JustifyContent::FLEX_END);

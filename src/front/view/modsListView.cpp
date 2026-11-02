@@ -3,6 +3,7 @@
 #include <front/activity/modActivity.hpp>
 #include <front/styles/colors.hpp>
 #include <front/view/modTileView.hpp>
+#include <utils/localization.hpp>
 #include <utils/utils.hpp>
 
 namespace front {
@@ -74,11 +75,27 @@ void ModsListView::addRows(std::list<core::ModInfo>& modInfos) {
                     brls::Application::pushActivity(new ModActivity(this->modCD, true, this),
                                                     brls::TransitionAnimation::NONE);
                 } else {
-                    this->modCD.setCurrentModEntry(mod.files.back());
-                    brls::Application::pushActivity(new ModActivity(this->modCD, false, this),
-                                                    brls::TransitionAnimation::NONE);
-                    MODCD_LOG_DEBUG("[{}]: there are no files for the current version - version: {}",
-                                    __PRETTY_FUNCTION__, this->game.version);
+                    const core::ModEntry unsupportedEntry = mod.files.back();
+
+                    auto* dialog = new brls::Dialog(utils::Localization::getInterpolated(
+                        "ModsListView.UnsupportedVersionDialog.WarningMessage",
+                        {{"modVersion", std::to_string(unsupportedEntry.gameVersion)},
+                         {"gameVersion", std::to_string(this->game.version)}}));
+
+                    dialog->addButton(utils::Localization::get("ModsListView.UnsupportedVersionDialog.ConfirmButton"),
+                                      [this, unsupportedEntry]() {
+                                          this->modCD.setCurrentModEntry(unsupportedEntry);
+                                          brls::Application::pushActivity(new ModActivity(this->modCD, false, this),
+                                                                          brls::TransitionAnimation::NONE);
+                                      });
+
+                    dialog->addButton(utils::Localization::get("ModsListView.UnsupportedVersionDialog.CancelButton"),
+                                      []() {});
+
+                    dialog->open();
+
+                    MODCD_LOG_DEBUG("[{}]: no files for current version - version: {}", __PRETTY_FUNCTION__,
+                                    this->game.version);
                 }
             } else {
                 try {

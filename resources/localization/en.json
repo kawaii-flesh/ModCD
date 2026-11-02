@@ -31,6 +31,13 @@
         "Version": "Version: {version}",
         "UnsupportedVersion": "Unsupported ver.: {version}"
     },
+    "ModsListView": {
+        "UnsupportedVersionDialog": {
+            "WarningMessage": "This mod does not support your game version\n\nMod supported version: {modVersion}\nYour game version: {gameVersion}\n\nContinue anyway?",
+            "ConfirmButton": "CONTINUE",
+            "CancelButton": "CANCEL"
+        }
+    },
     "ModTileView": {
         "Name": "Name: {name}",
         "Type": "Type: {type}",
